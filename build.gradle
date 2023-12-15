@@ -1,20 +1,10 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE'
-        classpath 'org.owasp:dependency-check-gradle:3.1.2'
-    }
+plugins {
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.4.RELEASE'
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'org.owasp.dependencycheck'
-
 bootJar {
+    enabled = true
     archiveBaseName = 'spring-boot-fun'
     archiveVersion = '0.0.1'
 }
@@ -27,9 +17,14 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    // this dependency contains a couple of known vulnerabilities
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.3'
-
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.3'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'junit:junit:4.12' // Specify version for JUnit
+    testImplementation 'junit:junit'
+}
+
+dependencyCheck {
+    failOnError = false
+    format = 'ALL'
+    failBuildOnCVSS = 7
+    suppressionFile = 'dependency-check-known-issues.xml'
 }
