@@ -1,38 +1,40 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-
-group = 'com.github.jitpack'
-version = '2.0'
-
-sourceCompatibility = 1.8 // java 8
-targetCompatibility = 1.8
-
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-  implementation 'com.google.guava:guava:29.0-jre'
-}
-
-java {
-	withSourcesJar()
-	withJavadocJar()
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-		from components.java
-        }
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE'
+        classpath 'org.owasp:dependency-check-gradle:3.1.2'
     }
 }
 
-wrapper {
-    gradleVersion = "7.3.3"
-    distributionType = Wrapper.DistributionType.ALL
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.owasp.dependencycheck'
+
+bootJar {
+    baseName = 'spring-boot-fun'
+    version =  '0.0.1'
 }
 
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // this dependency contains a couple of known vulnerabilities
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.3'
+
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    testCompile 'junit:junit'
+}
+
+// OWASP Dependency Check settings
 dependencyCheck {
 
     // let's ignore errors to make builds in Jenkins more stable
