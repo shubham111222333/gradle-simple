@@ -15,8 +15,8 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.owasp.dependencycheck'
 
 bootJar {
-    baseName = 'spring-boot-fun'
-    version =  '0.0.1'
+    archiveBaseName = 'spring-boot-fun'
+    archiveVersion = '0.0.1'
 }
 
 repositories {
